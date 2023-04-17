@@ -1,0 +1,30 @@
+.col {
+	width: 100%;
+}
+.card {
+	border-radius: 10px !important;
+}
+
+.container {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+}
+
+.pieChart {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+.legend {
+	font-weight: bold;
+	text-align: center;
+	margin-left: 10px;
+}
+
+.empty {
+	height: 356px;
+	width: 100%;
+}

@@ -1,0 +1,14 @@
+.baiStatusCard {
+	width: 100%;
+	border-radius: 10px !important;
+}
+
+.baiCardImage {
+	padding: 8px;
+	border-bottom: 2px solid #ddd;
+}
+
+.baiStatusText {
+	font-size: 18px;
+	font-weight: bold;
+}

@@ -1,0 +1,28 @@
+.shadow-xs {
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.15);
+}
+.shadow-sm {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.shadow {
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 12px 40px 0 rgba(0, 0, 0, 0.19);
+}
+.text-sm {
+	font-size: small;
+}
+.text-md {
+	font-size: medium;
+}
+.text-lg {
+	font-size: large;
+}
+.text-xl {
+	font-size: x-large;
+}
+
+a {
+	color: #4b4b4b !important;
+}
+* {
+	margin: 0;
+}
