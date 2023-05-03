@@ -26,7 +26,6 @@ function FileMonitorThreadTable({ isLoading }: FileMonitorThreadTableProps) {
 	const [filteredInfo, setFilteredInfo] = useState<any>({});
 	const [searchedColumn, setSearchedColumn] = useState("");
 	const setSearchText = (text: string) => dispatch(setSearch(text));
-	const searchInput = useRef<any>(null);
 	const files = useGetFiles();
 
 	const handleSearch = (selectedKeys: any, confirm: any, dataIndex: any) => {
@@ -69,7 +68,7 @@ function FileMonitorThreadTable({ isLoading }: FileMonitorThreadTableProps) {
 		)
 		.map((monitor, index) => ({
 			...monitor,
-			id: index,
+			id: index + 1,
 		}));
 	const columns = getColumns(
 		filteredInfo,
@@ -79,7 +78,6 @@ function FileMonitorThreadTable({ isLoading }: FileMonitorThreadTableProps) {
 			(files.isLoading && !state.includeFileCount),
 		{
 			searchQuery: state.searchQuery,
-			searchInput,
 			searchedColumn,
 			handleReset,
 			handleSearch,
@@ -107,8 +105,10 @@ function FileMonitorThreadTable({ isLoading }: FileMonitorThreadTableProps) {
 				onChange={handleChange}
 				scroll={{ y: window.innerHeight - 270 }}
 				pagination={{
+					showSizeChanger: true,
 					pageSize: state.perPage,
 					pageSizeOptions: [10, 12, 15, 20, 30, 50, 100],
+					hideOnSinglePage: false,
 				}}
 			/>
 		</>

@@ -1,0 +1,365 @@
+[
+	{
+		"teamName": "Green Team",
+		"members": [
+			{
+				"email": "vedprakash.patel@mrcooper.com",
+				"role": "Tech Lead: TRIMS, SAF, Small Apps"
+			},
+			{
+				"email": "kabilan.mohanasundaram@mrcooper.com",
+				"role": "TRIMS, SAF, Small Apps"
+			},
+			{
+				"email": "sivaram.shabaria@mrcooper.com",
+				"role": "TRIMS, SAF, Small Apps"
+			},
+			{
+				"email": "anil.komat.reddy@mrcooper.com",
+				"role": "TRIMS, SAF, Small Apps"
+			},
+			{
+				"email": "murali.viswanathan@mrcooper.com",
+				"role": "TRIMS, SAF, Small Apps"
+			},
+			{
+				"email": "mohankumar.c@mrcooper.com",
+				"role": "TRIMS, SAF, Small Apps, Shield"
+			},
+			{
+				"email": "eswaran.g@mrcooper.com",
+				"role": "TRIMS, SAF, Small Apps"
+			},
+			{
+				"email": "bharathwaj.j@mrcooper.com",
+				"role": "TRIMS, SAF, Small Apps"
+			},
+			{
+				"email": "savanhmaly.inthathirath@mrcooper.com",
+				"role": "TRIMS, SAF, Small Apps"
+			}
+		]
+	},
+	{
+		"teamName": "First Order Team",
+		"members": [
+			{
+				"email": "melissa.espinoza@mrcooper.com ",
+				"role": "Management Oversight: Risk and Compliance"
+			},
+
+			{ "email": "ramkumar.m@mrcooper.com", "role": "Archer, Workvia, Coupa" },
+
+			{
+				"email": "anil.komat.reddy@mrcooper.com",
+				"role": "MIAC, RATA, Workiva"
+			},
+
+			{ "email": "vedprakash.patel@mrcooper.com", "role": "Teammate" }
+		]
+	},
+	{
+		"teamName": "QA Team",
+		"members": [
+			{
+				"email": "shanmugapriya.p@mrcooper.com",
+				"role": "QA Lead: TRIMS, Shield, Archer, Small Apps"
+			},
+			{
+				"email": "divyabarathi.r@mrcooper.com",
+				"role": "QA : TRIMS, Shield, Archer, Small Apps"
+			},
+			{
+				"email": "martina.as@mrcooper.com",
+				"role": "QA : TRIMS, Shield, Archer, Small Apps"
+			}
+		]
+	},
+	{
+		"teamName": "Architecture and Devops Support Team",
+		"members": [
+			{
+				"email": "larry.flynt@mrcooper.com",
+				"role": "DevOps: Manager"
+			},
+			{
+				"email": "tirumal.sunkara@mrcooper.com",
+				"role": "DevOps: Prod Support and Deployments"
+			},
+			{
+				"email": "kerry.burton@mrcooper.com",
+				"role": "DevOps: Prod Support and Deployments"
+			},
+			{
+				"email": "leo.chibvongodze@mrcooper.com",
+				"role": "DevOps: Prod Support and Deployments"
+			},
+			{
+				"email": "joel.bijapurkar@mrcooper.com",
+				"role": "DevOps: Prod Support and Deployments"
+			}
+		]
+	},
+	{
+		"teamName": "Business Partners",
+		"members": [
+			{
+				"email": "lola.akibola@mrcooper.com",
+				"role": "Treasury Business"
+			},
+			{
+				"email": "calvin.duckworth@mrcooper.com",
+				"role": "Treasury Business"
+			},
+			{
+				"email": "stacy.unruh@mrcooper.com",
+				"role": "Treasury Business"
+			},
+			{
+				"email": "david.saucedo@mrcooper.com",
+				"role": "Treasury Business"
+			},
+			{
+				"email": "vincent.naidoo@mrcooper.com",
+				"role": "Treasury Business"
+			},
+			{
+				"email": "mark.tierney@mrcooper.com",
+				"role": "Treasury Business"
+			}
+		]
+	},
+	{
+		"teamName": "Escalations and Approvals Team",
+		"members": [
+			{
+				"email": "chris.hostetter@mrcooper.com",
+				"role": "Escalations"
+			},
+			{
+				"email": "adam.coggan@mrcooper.com",
+				"role": "Escalations"
+			}
+		]
+	},
+	{
+		"type": "bank",
+		"teamName": "Bank Contacts",
+		"banks": [
+			{
+				"bank": "First Republic Bank",
+				"members": [
+					{
+						"name": "Chase, Barbara",
+						"email": "bchase@firstrepublic.com"
+					},
+					{
+						"name": "Porr, Jim",
+						"email": "jporr@firstrepublic.com"
+					},
+					{
+						"name": "Payments_Transmissions",
+						"email": "Payments_Transmissions@firstrepublic.com"
+					},
+					{
+						"name": "Julien",
+						"email": "mjulien@firstrepublic.com"
+					},
+					{
+						"name": "Slutzky, Pat",
+						"email": "pslutzky@firstrepublic.com"
+					}
+				]
+			},
+			{
+				"bank": "Western Alliance Bank",
+				"members": [
+					{
+						"name": "Z Z",
+						"email": "wlgtreasmgmt@westernalliancebank.com"
+					},
+					{
+						"name": "Kathy Jorgenson",
+						"email": "KJorgenson@westernalliancebank.com"
+					},
+					{
+						"name": "Janelle Miller",
+						"email": "Janelle.Miller@westernalliancebank.com"
+					},
+					{
+						"name": "WLG Treasury Management",
+						"email": "wlgtreasmgmt@westernalliancebank.com"
+					},
+					{
+						"name": "Hope Carr",
+						"email": "hcarr@westernalliancebank.com"
+					}
+				]
+			},
+			{
+				"bank": "City National Bank (CNB)",
+				"members": [
+					{
+						"name": "Calica, Jerome",
+						"email": "Jerome.Calica@cnb.com"
+					},
+					{
+						"name": "Skeoch, Wendie",
+						"email": "Wendie.Skeoch@cnb.com"
+					},
+					{
+						"name": "Chavez, TC",
+						"email": "TC.Chavez@cnb.com"
+					},
+					{
+						"name": "Nelson, Lorraine",
+						"email": "Lorraine.Nelson@cnb.com"
+					}
+				]
+			},
+			{
+				"bank": "Bank of America (BOA)",
+				"members": [
+					{
+						"name": "DTS 24x7",
+						"email": "dts.24x7@bankofamerica.com"
+					},
+					{
+						"name": "DTS Service Desk",
+						"email": "dts.service.desk@bofa.com"
+					}
+				]
+			},
+			{
+				"bank": "Wells Fargo (WF)",
+				"members": [
+					{
+						"name": "ecscusca",
+						"email": "ecscusca@wellsfargo.com"
+					},
+					{
+						"name": "Lilo Niko",
+						"email": "lilo.niko@wellsfargo.com"
+					},
+					{
+						"name": "Garrison T Mccormick",
+						"email": "Garrison.T.Mccormick@wellsfargo.com"
+					},
+					{
+						"name": "Verna Tunstel",
+						"email": "verna.tunstel@wellsfargo.com"
+					}
+				]
+			},
+			{
+				"bank": "First Foundation Bank",
+				"members": [
+					{
+						"name": "CAS Helpdesk",
+						"email": "CAS.HELPDESK@chase.com"
+					},
+					{
+						"name": "Kimberly R Gerard",
+						"email": "KIMBERLY.R.GERARD@JPMORGAN.COM"
+					},
+					{
+						"name": "Common Distro",
+						"email": "OnlineBanking@ff-inc.com"
+					},
+					{
+						"name": "Common Distro",
+						"email": "DigitalBanking@ff-inc.com"
+					},
+					{
+						"name": "Avery Ngov",
+						"email": "angov@ff-inc.com"
+					},
+					{
+						"name": "Jimmy Ton",
+						"email": "jton@ff-inc.com"
+					},
+					{
+						"name": "Tracy Miller",
+						"email": "tmiller@ff-inc.com"
+					},
+					{
+						"name": "Shannon Goeken",
+						"email": "sgoeken@ff-inc.com"
+					}
+				]
+			},
+			{
+				"bank": "Citi Bank",
+				"members": [
+					{
+						"name": "EB Investigations",
+						"email": "eb.investigations@citi.com"
+					},
+					{
+						"name": "Stephen Cronin",
+						"email": "stephen1.cronin@citi.com"
+					},
+					{
+						"name": "Albert Kraus",
+						"email": "albert.kraus@citi.com"
+					},
+					{
+						"name": "Wendy Kurtz",
+						"email": "wendy.kurtz@citi.com"
+					}
+				]
+			},
+			{
+				"bank": "Goldman Sachs (GSB)",
+				"members": [
+					{
+						"name": "Parsons, Janett",
+						"email": "JParsons@signatureNY.com"
+					},
+					{
+						"name": "Cahill, Mabel",
+						"email": "mwcahill@signatureny.com"
+					},
+					{
+						"name": "Bhakti Parekh",
+						"email": "bhakti.parekh@gs.com"
+					},
+					{
+						"name": "Client Services",
+						"email": "txb-client-service@gs.com"
+					}
+				]
+			},
+			{
+				"bank": "New York Community Bank (NYCB)",
+				"members": [
+					{
+						"name": "Savvas Kollis",
+						"email": "Savvas.Kollis@mynycb.com"
+					},
+					{
+						"name": "Fuad Capric",
+						"email": "Fuad.Capric@mynycb.com"
+					},
+					{
+						"name": "Cash Management",
+						"email": "CashManagement@mynycb.com"
+					}
+				]
+			},
+			{
+				"bank": "M&T Bank",
+				"members": [
+					{
+						"name": "Marisa Gaiser",
+						"email": "mgaiser@mtb.com"
+					},
+					{
+						"name": "Treasury Management Servicing Team",
+						"email": "tmiimplp@mtb.com"
+					}
+				]
+			}
+		]
+	}
+]

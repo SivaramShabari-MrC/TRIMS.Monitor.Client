@@ -43,7 +43,7 @@ export const EnvironmentDropDown = () => {
 	);
 };
 
-const GetEnvironmentName = (type: EnvironmentType) => {
+export const GetEnvironmentName = (type: EnvironmentType) => {
 	switch (type) {
 		case 0:
 			return "Development";

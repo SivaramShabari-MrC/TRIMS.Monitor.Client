@@ -1,0 +1,26 @@
+.contactCard {
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.1);
+	width: 100%;
+	text-align: center;
+	height: 100%;
+}
+
+.contactImage {
+	border: 3px solid #40a9ff;
+	border-radius: 50%;
+	padding: 4px;
+}
+
+.contactName {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.contactInfo {
+	margin-right: 8px;
+}
+
+.contactEmail {
+	font-size: 14px;
+	color: #40a9ff;
+}

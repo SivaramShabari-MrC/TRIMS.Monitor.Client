@@ -25,7 +25,6 @@ const getColumnSearchProps = ({
 			}}
 		>
 			<Input
-				ref={searchInput}
 				placeholder={`Search ${dataIndex}`}
 				value={selectedKeys[0]}
 				onChange={(e) =>

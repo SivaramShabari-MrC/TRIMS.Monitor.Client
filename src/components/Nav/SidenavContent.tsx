@@ -26,22 +26,21 @@ const links = [
 		route: "/transactionReport",
 		icon: <TbReportMoney />,
 	},
-	// {
-	// 	name: "Windows Services",
-	// 	route: "/windows-services",
-	// 	icon: <MdMiscellaneousServices />,
-	// },
 	{
 		name: "BAI File Status",
 		route: "/baiFileStatus",
 		icon: <AiOutlineBank />,
 	},
-	// {
-	// 	name: "Scheduled Jobs",
-	// 	route: "/scheduled-jobs",
-	// 	icon: <MdScheduleSend />,
-	// },
-
+	{
+		name: "Scheduled Tasks",
+		route: "/scheduledTasks",
+		icon: <MdScheduleSend />,
+	},
+	{
+		name: "Contacts",
+		route: "/contacts",
+		icon: <UserOutlined />,
+	},
 	// {
 	// 	name: "Scheduled Maintainence",
 	// 	route: "/scheduled-maintainence",
@@ -51,11 +50,6 @@ const links = [
 	// 	name: "Calendar",
 	// 	route: "/calendar",
 	// 	icon: <CalendarOutlined />,
-	// },
-	// {
-	// 	name: "Contacts",
-	// 	route: "/contacts",
-	// 	icon: <UserOutlined />,
 	// },
 	// {
 	// 	name: "KEDB",

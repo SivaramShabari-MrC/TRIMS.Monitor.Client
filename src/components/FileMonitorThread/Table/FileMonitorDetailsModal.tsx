@@ -69,7 +69,7 @@ export default function MonitorModal({
 						}}
 						searchWords={[searchText]}
 						autoEscape
-						textToHighlight={textToHighlight ? textToHighlight.toString() : ""}
+						textToHighlight={data.threadName}
 					/>
 				</Link>
 			)}

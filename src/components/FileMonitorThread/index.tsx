@@ -6,11 +6,7 @@ import {
 	useGetFileMonitorWindowsServiceStatus,
 } from "../../api/fileMonitorThread";
 import { ReloadOutlined, FilterOutlined } from "@ant-design/icons";
-import {
-	setData,
-	setFilesLoading,
-	setIncludeFileCount,
-} from "../../store/fileMonitorThreadSlice";
+import { setIncludeFileCount } from "../../store/fileMonitorThreadSlice";
 import { Space, Typography, Switch, Button, message } from "antd";
 import {
 	BFMSStatusMenu,
@@ -20,9 +16,11 @@ import {
 } from "./Dropdowns";
 import { useDispatch, useSelector } from "../../store";
 import Loading from "../common/Loading";
+import { GetEnvironmentName } from "../Nav/EnvironmentDropdown";
 const { Text } = Typography;
 function FileMonitorThreads() {
 	const state = useSelector((s) => s.fileMonitorThreads);
+	const env = useSelector((s) => s.global.environment);
 	const { refetch, isLoading } = useGetFileMonitorThreads();
 	useGetFileMonitorWindowsServiceStatus();
 	const files = useGetFiles();
@@ -35,7 +33,11 @@ function FileMonitorThreads() {
 	return (
 		<>
 			{state.isDataLoading ? (
-				<Loading message={"Loading FMS and BFMS monitor threads..."} />
+				<Loading
+					message={`Loading FMS and BFMS monitor threads from ${GetEnvironmentName(
+						env
+					)}...`}
+				/>
 			) : (
 				<>
 					<Space wrap>

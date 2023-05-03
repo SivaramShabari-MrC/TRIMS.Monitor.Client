@@ -9,6 +9,8 @@ import Login from "./components/common/Login";
 import { message } from "antd";
 import TransactionReport from "./components/TransactionReport";
 import BAIFileStatus from "./components/BAIFilleStatus";
+import Contacts from "./components/Contacts";
+import ScheduledTasks from "./components/ScheduledTasks";
 
 const userAgentApplication = new UserAgentApplication({
 	auth: {
@@ -73,6 +75,8 @@ const App = () => {
 						/>
 						<Route path="/transactionReport" element={<TransactionReport />} />
 						<Route path="/baiFileStatus" element={<BAIFileStatus />} />
+						<Route path="/contacts" element={<Contacts />} />
+						<Route path="/scheduledTasks" element={<ScheduledTasks />} />
 					</Routes>
 				</SidebarWithHeader>
 			)}

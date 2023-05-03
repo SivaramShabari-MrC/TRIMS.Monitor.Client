@@ -4,7 +4,7 @@ const Login = ({ login }: { login: () => void }) => (
 	<Result
 		status="403"
 		title="Not Authorized"
-		subTitle="Sorry, you are not authorized to access this page."
+		subTitle="Please login to continue using TRIMS Monitor."
 		extra={
 			<Button onClick={login} type="primary">
 				Login with AzureAD

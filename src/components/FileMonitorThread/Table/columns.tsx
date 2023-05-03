@@ -20,8 +20,21 @@ export const getColumns = (
 	folder: FolderType,
 	files: ThreadFolderFiles[],
 	isFileCountLoading: boolean,
-	searchQuery: any
+	searchQuery: {
+		searchQuery: string;
+		searchedColumn: string;
+		handleReset: any;
+		handleSearch: any;
+		setSearchText: any;
+		setSearchedColumn: any;
+	}
 ) => [
+	{
+		title: "",
+		key: "SNO",
+		width: 70,
+		dataIndex: "id",
+	},
 	{
 		title: "Thread Name",
 		key: "ThreadName",
