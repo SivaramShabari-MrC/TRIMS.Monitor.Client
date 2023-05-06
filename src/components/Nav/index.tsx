@@ -1,10 +1,11 @@
-import { Layout, Space } from "antd";
+import { Layout, Space, Tag, Typography } from "antd";
 import SidenavContent from "./SidenavContent";
 import * as styles from "./Nav.module.css";
 import config from "../../config";
 const { Header, Sider, Content } = Layout;
 import { Card } from "antd";
 import { blue } from "@ant-design/colors";
+import moment from "moment";
 
 export default function SidebarWithHeader({
 	children,
@@ -21,13 +22,20 @@ export default function SidebarWithHeader({
 				<SidenavContent />
 			</Sider>
 			<Layout className={styles.contentLayout}>
-				<Header style={{ backgroundColor: "white" }} className={styles.header}>
-					<Card
-						style={{ borderColor: blue[4], borderWidth: "1px" }}
-						size="small"
+				<Header className={styles.header}>
+					<Tag
+						color="processing"
+						style={{ fontWeight: "bold", marginRight: 18, color: blue[5] }}
+					>
+						{moment().format("dddd - LL")}
+					</Tag>
+					<Tag
+						style={{ fontWeight: "bold" }}
+						className="ma-2"
+						color="processing"
 					>
 						{config.environmentName}
-					</Card>
+					</Tag>
 				</Header>
 				<Content className={styles.content}>{children}</Content>
 			</Layout>

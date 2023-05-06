@@ -16,7 +16,6 @@ function FileMonitorThreadTable({ isLoading }: FileMonitorThreadTableProps) {
 		dispatch(setPageSize(pagination.pageSize));
 	};
 
-	const isFilesLoading = state.isFilesLoading && state.sort === "Thread Name";
 	const columns = getColumns(state.folder, state.files, state.isFilesLoading);
 	useEffect(() => {
 		if (tableRef.current) {

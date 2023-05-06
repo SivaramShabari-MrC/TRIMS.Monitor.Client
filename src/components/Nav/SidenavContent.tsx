@@ -12,12 +12,19 @@ import {
 	UserOutlined,
 	CalendarOutlined,
 	DatabaseOutlined,
+	HomeOutlined,
+	AppstoreOutlined,
 } from "@ant-design/icons";
 import styles from "./Nav.module.css";
 import logo from "../../assets/TRIMS.ico";
 const links = [
 	{
-		name: "FileMonitorThreads",
+		name: "Dashboard",
+		route: "/",
+		icon: <AppstoreOutlined />,
+	},
+	{
+		name: "File Monitors",
 		route: "/fileMonitorThreads",
 		icon: <GoFileSubmodule />,
 	},
@@ -74,11 +81,11 @@ const links = [
 ];
 const SidenavContent = () => {
 	return (
-		<Space direction="vertical">
+		<div style={{ width: 237 }}>
 			<Space direction="horizontal">
-				<img src={logo} height={40} alt="" />
+				<img src={logo} className="ml-3" height={40} alt="" />
 				<Typography.Title className={`${styles.navTitle} mt-2`} level={3}>
-					<span className="m-2">Trims Monitor</span>
+					<span className="m-2">TRIMS Monitor</span>
 				</Typography.Title>
 			</Space>
 			{links.map((link) => (
@@ -86,7 +93,7 @@ const SidenavContent = () => {
 					{link.name}
 				</NavItem>
 			))}
-		</Space>
+		</div>
 	);
 };
 

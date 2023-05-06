@@ -120,7 +120,7 @@ export const getColumns = (
 							}}
 						/>
 					</Popover>
-					<Text>{path}</Text>
+					<p>{path.toLowerCase()}</p>
 				</Space>
 			);
 		},

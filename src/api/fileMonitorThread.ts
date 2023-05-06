@@ -20,15 +20,9 @@ import {
 } from "../types";
 import { useEffect, useState } from "react";
 
-export const getFileMonitorThreads = (
-	system: SystemType,
-	folder: FolderType
-) => {
+export const getFileMonitorThreads = (system: SystemType) => {
 	return api.get<FileMonitorConfig>("/fileMonitorThreads/all", {
-		params: {
-			system,
-			folder,
-		},
+		params: { system },
 	});
 };
 
@@ -100,17 +94,16 @@ export const executeWindowsFMSServiceAction = (
 	});
 };
 
-export const useGetFileMonitorThreads = () => {
-	const state = useSelector((s) => s.fileMonitorThreads);
+export const useGetFileMonitorThreads = (system: SystemType) => {
 	const dispatch = useDispatch();
-	const folder = state.folder;
 	return useQuery(
-		["fileMonitorThreads", state.system],
-		() => getFileMonitorThreads(state.system, folder),
+		["fileMonitorThreads", system],
+		() => getFileMonitorThreads(system),
 		{
 			refetchOnWindowFocus: false,
 			refetchOnMount: false,
 			refetchOnReconnect: false,
+			staleTime: Infinity,
 			onSuccess: (data) => {
 				dispatch(setDataLoading(false));
 				dispatch(

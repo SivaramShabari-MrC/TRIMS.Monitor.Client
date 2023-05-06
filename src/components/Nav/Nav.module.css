@@ -1,6 +1,7 @@
 .sider {
 	background-color: red;
-	padding: 10px;
+	padding-top: 14px;
+	/* margin-top: 12px; */
 	min-height: 100vh;
 }
 .mainLayout {
@@ -29,9 +30,10 @@
 }
 
 .navItemContainer {
-	margin-left: 3px;
-	font-size: 14px;
+	margin-top: 24px;
+	margin-left: 18px;
 	display: flex;
+	width: 100%;
 }
 .navItemContainer:hover {
 	color: #4096ff;
@@ -39,7 +41,7 @@
 
 .navItemIcon {
 	font-size: 24px;
-	margin-right: 12px;
+	margin-right: 16px;
 }
 
 .navItemText {

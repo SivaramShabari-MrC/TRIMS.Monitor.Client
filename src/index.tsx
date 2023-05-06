@@ -11,7 +11,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			staleTime: 10 * 60 * 1000, // set stale time to 10 minutes for all queries
+			staleTime: 5 * 60 * 1000, // set stale time to 5 minutes for all queries
 		},
 	},
 });
@@ -27,7 +27,7 @@ root.render(
 				<BrowserRouter>
 					<App />
 				</BrowserRouter>
-				<ReactQueryDevtools initialIsOpen={false} />
+				{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 			</QueryClientProvider>
 		</ReduxStoreProvider>
 	</>

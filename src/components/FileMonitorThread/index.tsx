@@ -20,7 +20,7 @@ import Loading from "../common/Loading";
 
 function FileMonitorThreads() {
 	const state = useSelector((s) => s.fileMonitorThreads);
-	const { refetch, isLoading } = useGetFileMonitorThreads();
+	const { refetch, isLoading } = useGetFileMonitorThreads(state.system);
 	useGetFileMonitorWindowsServiceStatus();
 	const files = useGetFiles();
 	const dispatch = useDispatch();
