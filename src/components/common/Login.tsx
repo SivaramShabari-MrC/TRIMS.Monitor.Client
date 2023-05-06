@@ -7,7 +7,7 @@ const Login = ({ login }: { login: () => void }) => (
 		subTitle="Please login to continue using TRIMS Monitor."
 		extra={
 			<Button onClick={login} type="primary">
-				Login with AzureAD
+				Login with Microsoft
 			</Button>
 		}
 	/>

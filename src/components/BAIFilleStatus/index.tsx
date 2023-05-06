@@ -7,9 +7,7 @@ import Loading from "../common/Loading";
 import { blue } from "@ant-design/colors";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "../../store";
-import { GetEnvironmentName } from "../Nav/EnvironmentDropdown";
 function BAIFileStatus() {
-	const environment = useSelector((state) => state.global.environment);
 	const date = useSelector((state) => state.BAIFileStatus.date);
 	const report = useBAIFileReport();
 	const dispatch = useDispatch();
@@ -18,9 +16,7 @@ function BAIFileStatus() {
 		<>
 			{report.isLoading ? (
 				<Loading
-					message={`Fetching BAI file statues in ${GetEnvironmentName(
-						environment
-					)} environment for ${moment(date).format("ll")}`}
+					message={`Fetching BAI file statues for ${moment(date).format("ll")}`}
 				/>
 			) : (
 				<Space direction="vertical">

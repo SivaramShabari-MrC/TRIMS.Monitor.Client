@@ -22,7 +22,6 @@ export interface ThreadConfig {
 	sendEmailOnError: boolean;
 	errorEmailRecipients: string;
 	endpoint: Endpoint;
-	files: ThreadFileType[] | null;
 }
 
 export interface ThreadFileType {

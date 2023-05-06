@@ -8,12 +8,10 @@ import { blue } from "@ant-design/colors";
 import Loading from "../common/Loading";
 import { useDispatch, useSelector } from "../../store";
 import dayjs from "dayjs";
-import { GetEnvironmentName } from "../Nav/EnvironmentDropdown";
 
 const { RangePicker } = DatePicker;
 const { Text } = Typography;
 function TransactionReport() {
-	const environment = useSelector((state) => state.global.environment);
 	const { from, to } = useSelector((state) => state.transactionReport);
 	const transactionReport = useTransactionReport();
 	const dispatch = useDispatch();
@@ -21,11 +19,9 @@ function TransactionReport() {
 		<>
 			{transactionReport.isLoading ? (
 				<Loading
-					message={`Loading transaction report in ${GetEnvironmentName(
-						environment
-					)} environment from ${moment(from).format("ll")} to ${moment(
-						to
-					).format("ll")} ...`}
+					message={`Loading transaction report from ${moment(from).format(
+						"ll"
+					)} to ${moment(to).format("ll")} ...`}
 				/>
 			) : (
 				<>

@@ -6,8 +6,15 @@ import { Provider as ReduxStoreProvider } from "react-redux";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import "antd-css-utilities/utility.min.css";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 10 * 60 * 1000, // set stale time to 10 minutes for all queries
+		},
+	},
+});
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 
 root.render(
@@ -20,6 +27,7 @@ root.render(
 				<BrowserRouter>
 					<App />
 				</BrowserRouter>
+				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
 		</ReduxStoreProvider>
 	</>

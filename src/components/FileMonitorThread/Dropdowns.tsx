@@ -4,6 +4,7 @@ import { Menu, Dropdown, Button, Space } from "antd";
 import {
 	setFileMonitorWindowsServiceStatus,
 	setFolder,
+	setSort,
 	setSystem,
 } from "../../store/fileMonitorThreadSlice";
 import { useDispatch, useSelector } from "../../store";
@@ -126,7 +127,6 @@ export const BFMSStatusMenu = () => {
 	const system = useSelector(
 		(state) => state.fileMonitorThreads.fileMonitorWindowsServiceStatus
 	);
-	const dispatch = useDispatch();
 	return (
 		<Dropdown
 			menu={{
@@ -146,6 +146,41 @@ export const BFMSStatusMenu = () => {
 			<Button loading={system.bfms === "Loading..."}>
 				<Space>
 					BFMS Status: {system.bfms}
+					<DownOutlined />
+				</Space>
+			</Button>
+		</Dropdown>
+	);
+};
+
+export const SortDropdown = () => {
+	const { sort } = useSelector((state) => state.fileMonitorThreads);
+	const dispatch = useDispatch();
+	return (
+		<Dropdown
+			menu={{
+				onClick: (info) => {
+					dispatch(setSort(info.key));
+				},
+				items: [
+					{
+						label: "File Time",
+						key: "File Time",
+					},
+					{
+						label: "File Count",
+						key: "File Count",
+					},
+					{
+						label: "Thread Name",
+						key: "Thread Name",
+					},
+				],
+			}}
+		>
+			<Button>
+				<Space>
+					Sort By: {sort || "NA"}
 					<DownOutlined />
 				</Space>
 			</Button>

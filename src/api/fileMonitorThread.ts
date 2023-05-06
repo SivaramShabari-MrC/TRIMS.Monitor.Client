@@ -11,7 +11,6 @@ import {
 	setFilesLoading,
 } from "../store/fileMonitorThreadSlice";
 import {
-	EnvironmentType,
 	FMSWindowsServiceCommand,
 	FileMonitorsWindowsServiceStatus,
 	FileMonitorConfig,
@@ -19,32 +18,29 @@ import {
 	SystemType,
 	ThreadFolderFiles,
 } from "../types";
+import { useEffect, useState } from "react";
 
 export const getFileMonitorThreads = (
-	environment: EnvironmentType,
 	system: SystemType,
-	includeFiles: boolean,
 	folder: FolderType
 ) => {
 	return api.get<FileMonitorConfig>("/fileMonitorThreads/all", {
 		params: {
-			environment,
 			system,
-			includeFiles,
 			folder,
 		},
 	});
 };
 
 export const getFileMonitorThreadFiles = (
-	environment: EnvironmentType,
 	system: SystemType,
 	threadNames: string[],
-	folder: FolderType
+	folder: FolderType,
+	setFilesLoading: () => void
 ) => {
+	setFilesLoading();
 	return api.get<ThreadFolderFiles[]>("/fileMonitorThreads/files", {
 		params: {
-			environment,
 			system,
 			threadNames: threadNames.join(","),
 			folder,
@@ -53,7 +49,6 @@ export const getFileMonitorThreadFiles = (
 };
 
 export const downloadFile = (
-	environment: EnvironmentType,
 	system: SystemType,
 	threadName: string,
 	folder: FolderType,
@@ -61,7 +56,6 @@ export const downloadFile = (
 ) => {
 	return api.get<string>("/fileMonitorThreads/downloadFile", {
 		params: {
-			environment,
 			system,
 			threadName,
 			folder,
@@ -71,7 +65,6 @@ export const downloadFile = (
 };
 
 export const moveFile = (
-	environment: EnvironmentType,
 	system: SystemType,
 	threadName: string,
 	from: FolderType,
@@ -80,7 +73,6 @@ export const moveFile = (
 ) => {
 	return api.get<any>("/fileMonitorThreads/moveFile", {
 		params: {
-			environment,
 			system,
 			threadName,
 			from,
@@ -90,25 +82,18 @@ export const moveFile = (
 	});
 };
 
-export const getWindowsFMSServiceStatuses = (environment: EnvironmentType) => {
+export const getWindowsFMSServiceStatuses = () => {
 	return api.get<FileMonitorsWindowsServiceStatus>(
-		"/fileMonitorThreads/windowsService/status",
-		{
-			params: {
-				environment,
-			},
-		}
+		"/fileMonitorThreads/windowsService/status"
 	);
 };
 
 export const executeWindowsFMSServiceAction = (
-	environment: EnvironmentType,
 	system: SystemType,
 	command: FMSWindowsServiceCommand
 ) => {
 	return api.get<any>("/fileMonitorThreads/windowsService/execute", {
 		params: {
-			environment,
 			system,
 			command,
 		},
@@ -117,20 +102,11 @@ export const executeWindowsFMSServiceAction = (
 
 export const useGetFileMonitorThreads = () => {
 	const state = useSelector((s) => s.fileMonitorThreads);
-	const environment = useSelector((s) => s.global.environment);
 	const dispatch = useDispatch();
-	const includeAllFiles = state.includeFileCount;
 	const folder = state.folder;
 	return useQuery(
-		[
-			"fileMonitorThreads",
-			state.includeFileCount,
-			state.folder,
-			state.system,
-			environment,
-		],
-		() =>
-			getFileMonitorThreads(environment, state.system, includeAllFiles, folder),
+		["fileMonitorThreads", state.system],
+		() => getFileMonitorThreads(state.system, folder),
 		{
 			refetchOnWindowFocus: false,
 			refetchOnMount: false,
@@ -139,16 +115,13 @@ export const useGetFileMonitorThreads = () => {
 				dispatch(setDataLoading(false));
 				dispatch(
 					setFileMonitorThreads(
-						data.data.sort((a, b) => (a.threadName > b.threadName ? 1 : -1))
+						data.data
+							.slice()
+							.sort((a, b) => (a.threadName > b.threadName ? 1 : -1))
 					)
 				);
 				dispatch(setData());
-				if (state.includeFileCount) {
-					const fileMonitorThreads = data.data
-						.filter((thread) => thread.files !== null)
-						.sort((a, b) => b.files!.length - a.files!.length);
-					return fileMonitorThreads;
-				} else return data.data;
+				return data.data;
 			},
 			onError: (e: any) => {
 				message.error(e.message);
@@ -161,21 +134,31 @@ export const useGetFileMonitorThreads = () => {
 };
 
 export const useGetFiles = () => {
-	const state = useSelector((state) => state.fileMonitorThreads);
-	const environment = useSelector((state) => state.global.environment);
-	const threadNames = state.data.map((m) => m.threadName);
+	const { data, system, folder, page, perPage, sort } = useSelector(
+		(state) => state.fileMonitorThreads
+	);
+	const start = (page - 1) * perPage;
+	const end = start + perPage;
+	const [threadNames, setThreadNames] = useState<string[]>([]);
 	const dispatch = useDispatch();
+	const _setFilesLoading = () => {
+		dispatch(setFilesLoading(true));
+	};
+	useEffect(() => {
+		if (data && data.length) {
+			const tNames =
+				sort === "Thread Name"
+					? data.map((m) => m.threadName).slice(start, end)
+					: data.map((m) => m.threadName);
+			setThreadNames(tNames);
+		}
+	}, [data]);
 	return useQuery(
-		["paths", ...threadNames, environment],
+		["files", folder, ...threadNames],
 		() =>
-			getFileMonitorThreadFiles(
-				environment,
-				state.system,
-				threadNames,
-				state.folder
-			),
+			getFileMonitorThreadFiles(system, threadNames, folder, _setFilesLoading),
 		{
-			enabled: !state.includeFileCount && threadNames.length > 0,
+			enabled: threadNames.length > 0,
 			refetchOnMount: false,
 			refetchOnWindowFocus: false,
 			refetchOnReconnect: false,
@@ -195,7 +178,6 @@ export const useGetFiles = () => {
 };
 
 type DownloadFile = {
-	environment: EnvironmentType;
 	system: SystemType;
 	threadName: string;
 	folder: FolderType;
@@ -204,7 +186,7 @@ type DownloadFile = {
 export const useDownLoadFile = () => {
 	return useMutation(
 		(p: DownloadFile) =>
-			downloadFile(p.environment, p.system, p.threadName, p.folder, p.fileName),
+			downloadFile(p.system, p.threadName, p.folder, p.fileName),
 		{
 			onSuccess: () => {},
 		}
@@ -212,7 +194,6 @@ export const useDownLoadFile = () => {
 };
 
 type MoveFile = {
-	environment: EnvironmentType;
 	system: SystemType;
 	threadName: string;
 	from: FolderType;
@@ -221,24 +202,22 @@ type MoveFile = {
 };
 
 export const useMoveFile = () => {
-	const client = useQueryClient();
+	const files = useGetFiles();
 	return useMutation(
-		(m: MoveFile) =>
-			moveFile(m.environment, m.system, m.threadName, m.from, m.to, m.fileName),
+		(m: MoveFile) => moveFile(m.system, m.threadName, m.from, m.to, m.fileName),
 		{
 			onSuccess: () => {
-				client.invalidateQueries({ queryKey: ["fileMonitorThreads", "paths"] });
+				files.refetch();
 			},
 		}
 	);
 };
 
 export const useGetFileMonitorWindowsServiceStatus = () => {
-	const environment = useSelector((state) => state.global.environment);
 	const dispatch = useDispatch();
 	return useQuery(
-		["windowsServiceStatus", environment],
-		() => getWindowsFMSServiceStatuses(environment),
+		["windowsServiceStatus"],
+		() => getWindowsFMSServiceStatuses(),
 		{
 			refetchOnWindowFocus: false,
 			refetchOnMount: false,

@@ -6,13 +6,10 @@ import { useSelector } from "../../store";
 
 function WindowsScheduledTasks() {
 	const { isLoading, data } = useGetScheduledTasks();
-	const environment = useSelector((state) => state.global.environment);
 	return (
 		<>
 			{isLoading ? (
-				<Loading
-					message={`Fetching Scheduled Tasks in ${environment} environment...`}
-				/>
+				<Loading message={`Fetching Scheduled Tasks...`} />
 			) : (
 				<Space>
 					<Row gutter={[16, 16]}>

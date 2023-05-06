@@ -16,7 +16,6 @@ const TransactionReportCard = ({
 		?.map((i) => ({ ...i, count: parseInt(i.count) }))
 		?.sort((a, b) => b.count - a.count)
 		?.slice(0, 6);
-	console.log({ data });
 	const COLORS = [blue[4], red[3], orange[4], green[4], yellow[5], cyan[4]];
 	const COLORS_LEGEND = [
 		blue[5],

@@ -2,7 +2,6 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 import fileMonitorThreads from "./fileMonitorThreadSlice";
 import transactionReport from "./transactionReportSlice";
 import BAIFileStatus from "./BAIFileStatusSlice";
-import { EnvironmentType } from "../types";
 import {
 	TypedUseSelectorHook,
 	useDispatch as useReduxDispatch,
@@ -10,27 +9,21 @@ import {
 } from "react-redux";
 
 interface GlobalState {
-	environment: EnvironmentType;
 	user: string | null;
 }
 
 const initialState: GlobalState = {
-	environment: EnvironmentType.Development,
 	user: null,
 };
 const global = createSlice({
 	name: "global",
 	initialState,
 	reducers: {
-		setEnvironment: (state, action) => ({
-			...state,
-			environment: action.payload,
-		}),
 		setUser: (state, action) => ({ ...state, user: action.payload }),
 	},
 });
 
-export const { setEnvironment, setUser } = global.actions;
+export const { setUser } = global.actions;
 
 const store = configureStore({
 	reducer: {

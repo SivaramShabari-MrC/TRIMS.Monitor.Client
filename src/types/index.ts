@@ -1,10 +1,4 @@
 export * from "./FileMonitorConfig";
-export enum EnvironmentType {
-	Development = 0,
-	QA = 1,
-	UAT = 2,
-	Production = 3,
-}
 
 export enum SystemType {
 	FMS = 0,
@@ -30,6 +24,7 @@ type FolderKeyType =
 	| "processedFolder"
 	| "debugFolder"
 	| "destinationFolder";
+
 export function GetFolderTypeKey(folder: FolderType): FolderKeyType {
 	switch (folder) {
 		case 0:

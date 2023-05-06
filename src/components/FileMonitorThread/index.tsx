@@ -6,38 +6,32 @@ import {
 	useGetFileMonitorWindowsServiceStatus,
 } from "../../api/fileMonitorThread";
 import { ReloadOutlined, FilterOutlined } from "@ant-design/icons";
-import { setIncludeFileCount } from "../../store/fileMonitorThreadSlice";
-import { Space, Typography, Switch, Button, message } from "antd";
+import { setData } from "../../store/fileMonitorThreadSlice";
+import { Space, Typography, Button, message } from "antd";
 import {
 	BFMSStatusMenu,
 	FMSStatusMenu,
 	FolderMenu,
+	SortDropdown,
 	SystemMenu,
 } from "./Dropdowns";
 import { useDispatch, useSelector } from "../../store";
 import Loading from "../common/Loading";
-import { GetEnvironmentName } from "../Nav/EnvironmentDropdown";
-const { Text } = Typography;
+
 function FileMonitorThreads() {
 	const state = useSelector((s) => s.fileMonitorThreads);
-	const env = useSelector((s) => s.global.environment);
 	const { refetch, isLoading } = useGetFileMonitorThreads();
 	useGetFileMonitorWindowsServiceStatus();
 	const files = useGetFiles();
 	const dispatch = useDispatch();
-
 	useEffect(() => {
-		files.refetch();
-	}, [state.page, state.perPage, state.folder]);
+		dispatch(setData());
+	}, [state.page, state.perPage, state.folder, state.searchQuery, state.sort]);
 
 	return (
 		<>
 			{state.isDataLoading ? (
-				<Loading
-					message={`Loading FMS and BFMS monitor threads from ${GetEnvironmentName(
-						env
-					)}...`}
-				/>
+				<Loading message={`Loading FMS and BFMS monitor threads...`} />
 			) : (
 				<>
 					<Space wrap>
@@ -59,23 +53,7 @@ function FileMonitorThreads() {
 							}}
 						/>
 						<SystemMenu />
-						<Space
-							className="px-2 py-1"
-							style={{
-								background: "white",
-								border: "1px solid #ddd",
-							}}
-						>
-							<Text>Sort By File Count</Text>
-							<Switch
-								className="ml-2"
-								size="small"
-								defaultChecked={state.includeFileCount}
-								onChange={(checked) => {
-									dispatch(setIncludeFileCount(checked));
-								}}
-							/>
-						</Space>
+						<SortDropdown />
 						<FolderMenu />
 						<Space>
 							<FMSStatusMenu />

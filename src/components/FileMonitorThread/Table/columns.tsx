@@ -12,35 +12,33 @@ import {
 	ThreadConfig,
 	ThreadFolderFiles,
 } from "../../../types";
-import getColumnSearchProps from "./ColumnSearchFilterProps";
+import FileMonitorModal from "./FileMonitorDetailsModal";
+import SearchDropdown from "./SearchDropdown";
 const { Text } = Typography;
 
 export const getColumns = (
-	filteredInfo: any,
 	folder: FolderType,
 	files: ThreadFolderFiles[],
-	isFileCountLoading: boolean,
-	searchQuery: {
-		searchQuery: string;
-		searchedColumn: string;
-		handleReset: any;
-		handleSearch: any;
-		setSearchText: any;
-		setSearchedColumn: any;
-	}
+	isFileCountLoading: boolean
 ) => [
 	{
-		title: "",
+		title: "#",
 		key: "SNO",
-		width: 70,
+		width: 60,
 		dataIndex: "id",
 	},
 	{
-		title: "Thread Name",
+		title: (
+			<div>
+				Thread Name <SearchDropdown />
+			</div>
+		),
 		key: "ThreadName",
 		width: 400,
 		dataIndex: "ThreadName",
-		...getColumnSearchProps({ ...searchQuery, dataIndex: "threadName" }),
+		render: (text: any, record: ThreadConfig) => (
+			<FileMonitorModal threadName={record.threadName} />
+		),
 	},
 	{
 		title: "AutoStart",
@@ -84,23 +82,24 @@ export const getColumns = (
 		dataIndex: "Files",
 		render: (text: any, record: ThreadConfig, index: any) => {
 			const fileCount = files?.find(
-				(f) => f.threadName === record.threadName && files[0]?.folder === folder
+				(f) => f.threadName === record.threadName && f.folder === folder
 			)?.files.length;
-			if (fileCount !== null && fileCount !== undefined)
-				return <Text>{fileCount}</Text>;
-			if (record.files !== null) return <Text>{record.files?.length}</Text>;
+			if (isFileCountLoading) return <Text>...</Text>;
+
 			if (
+				GetFolderTypeKey(folder) !== "debugFolder" &&
 				!record.endpoint.addEndPoint[0][GetFolderTypeKey(folder)] &&
 				!record.endpoint.addEndPoint[1][GetFolderTypeKey(folder)]
 			)
 				return <Text>-</Text>;
-			return <Text>{isFileCountLoading ? "..." : 0}</Text>;
+			return <Text>{fileCount || "0"}</Text>;
 		},
 	},
 	{
 		title: "Path",
 		key: "path",
 		dataIndex: "path",
+		// width: 850,
 		render: (text: any, record: ThreadConfig, index: any) => {
 			const _folder =
 				folder === FolderType.debugFolder ? FolderType.sourceFolder : folder;

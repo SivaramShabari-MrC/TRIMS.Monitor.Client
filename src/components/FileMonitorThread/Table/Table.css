@@ -1,0 +1,14 @@
+.antd-table-custom-class thead th,
+.antd-table-custom-class tbody td {
+	white-space: nowrap;
+	word-break: break-word;
+	word-break: break-all;
+}
+.ant-table-fixed {
+	table-layout: fixed;
+}
+
+.ant-table-tbody > tr > td {
+	word-wrap: break-word;
+	word-break: break-all;
+}

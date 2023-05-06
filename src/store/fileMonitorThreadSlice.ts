@@ -20,8 +20,7 @@ interface FileMonitorThreadsState {
 	isDataLoading: boolean;
 	isFilesLoading: boolean;
 	files: ThreadFolderFiles[];
-	filteredThreadsCount: number;
-	includeFileCount: boolean;
+	sort: "File Count" | "File Time" | "Thread Name";
 	system: SystemType;
 	fileMonitorWindowsServiceStatus: FileMonitorsWindowsServiceStatus;
 }
@@ -38,8 +37,7 @@ const initialState: FileMonitorThreadsState = {
 	isDataLoading: true,
 	isFilesLoading: true,
 	files: [],
-	filteredThreadsCount: 0,
-	includeFileCount: false,
+	sort: "Thread Name",
 	system: SystemType.FMS,
 	fileMonitorWindowsServiceStatus: {
 		fms: "Loading...",
@@ -67,13 +65,9 @@ export const fileMonitorThreadsSlice = createSlice({
 			fileMonitorThreads: action.payload,
 		}),
 		setAutoStart: (state, action) => ({ ...state, autoStart: action.payload }),
-		setIncludeFileCount: (state, action) => ({
+		setSort: (state, action) => ({
 			...state,
-			includeFileCount: action.payload,
-		}),
-		toggleIncludeFileCount: (state) => ({
-			...state,
-			includeFileCount: !state.includeFileCount,
+			sort: action.payload,
 		}),
 		setDataLoading: (state, action) => ({
 			...state,
@@ -81,7 +75,7 @@ export const fileMonitorThreadsSlice = createSlice({
 		}),
 		setFilesLoading: (state, action) => ({
 			...state,
-			isFilesLoading: action.payload,
+			isFilesLoading: action.payload === "NULL" ? null : action.payload,
 		}),
 		setPage: (state, action) => ({
 			...state,
@@ -92,52 +86,98 @@ export const fileMonitorThreadsSlice = createSlice({
 			perPage: action.payload,
 		}),
 		setFiles: (state, action: { type: any; payload: ThreadFolderFiles[] }) => {
-			const files = [];
+			const files = state.files.slice();
 			for (const file of action.payload) {
-				files.push(file);
+				const existingIndex = files.findIndex(
+					(f) => f.threadName === file.threadName && f.folder === file.folder
+				);
+				if (existingIndex >= 0) files[existingIndex] = file;
+				else files.push(file);
 			}
-			return { ...state, files: [...files] };
+			return { ...state, files };
 		},
 		setData: (state) => {
 			let fileMonitorThreads = current(state.fileMonitorThreads);
-			fileMonitorThreads = fileMonitorThreads
-				.filter((m) => {
-					return !!state.searchQuery
-						? m.threadName
-								.toLowerCase()
-								.includes(state.searchQuery.toLowerCase())
-						: true;
-				})
-				.filter(
-					(monitor) =>
-						!!monitor.endpoint?.addEndPoint[0][
-							GetFolderTypeKey(state.folder)
-						] ||
-						!!monitor.endpoint?.addEndPoint[1][
-							GetFolderTypeKey(state.folder)
-						] ||
-						state.folder === FolderType.debugFolder
-				)
-				.sort((a, b) => {
-					if (a.files && b.files) return b.files.length - a.files.length;
-					return 0;
-				});
-
-			const startIndex =
-				fileMonitorThreads.length <= state.perPage
-					? 1
-					: (state.page - 1) * state.perPage;
-			const endIndex = Math.min(
-				state.page * state.perPage,
-				fileMonitorThreads.length
+			let data = fileMonitorThreads.filter(
+				(monitor) =>
+					!!monitor.endpoint?.addEndPoint[0][GetFolderTypeKey(state.folder)] ||
+					!!monitor.endpoint?.addEndPoint[1][GetFolderTypeKey(state.folder)] ||
+					state.folder === FolderType.debugFolder
 			);
-			const data = fileMonitorThreads.slice(startIndex, endIndex);
-			const newState = {
+			if (state.searchQuery !== "") {
+				data = data.filter((m) =>
+					m.threadName.toLowerCase().includes(state.searchQuery.toLowerCase())
+				);
+			}
+			if (state.sort === "Thread Name") {
+				data = data.sort((t1, t2) =>
+					t2.threadName.localeCompare(t2.threadName)
+				);
+			} else if (state.sort === "File Count") {
+				data = data.sort((t1, t2) => {
+					const l1 =
+						state.files.find(
+							(file) =>
+								file.threadName === t1.threadName &&
+								file.folder === state.folder
+						)?.files.length || 0;
+					const l2 =
+						state.files.find(
+							(file) =>
+								file.threadName === t2.threadName &&
+								file.folder === state.folder
+						)?.files.length || 0;
+					return l2 - l1;
+				});
+			} else {
+				try {
+					const threadFolderFiles = [...state.files];
+					const latestFiles = threadFolderFiles
+						.filter((f) => f.folder === state.folder)
+						.filter((f) => f.files.length > 0)
+						.map((threadFolderFile) => {
+							const latestFile = threadFolderFile?.files?.reduce(
+								(prev, current) =>
+									prev &&
+									new Date(prev.date).getTime() >
+										new Date(current.date).getTime()
+										? prev
+										: current,
+								threadFolderFile.files[0]
+							);
+							return {
+								name: threadFolderFile.threadName,
+								time: latestFile?.date,
+								length: threadFolderFile.files.length,
+							};
+						})
+						.sort(
+							(a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
+						);
+					const sortedThreadNames = latestFiles.map((f) => f.name);
+					const orderedData = [
+						...data
+							.filter((t) => sortedThreadNames.includes(t.threadName))
+							.sort((a, b) => {
+								const aIndex = sortedThreadNames.indexOf(a.threadName);
+								const bIndex = sortedThreadNames.indexOf(b.threadName);
+								return aIndex - bIndex;
+							}),
+						...data.filter((t) => !sortedThreadNames.includes(t.threadName)),
+					];
+					data = orderedData;
+				} catch (err) {
+					console.error(err);
+				}
+			}
+			data = data.map((monitor, index) => ({
+				...monitor,
+				id: index + 1,
+			}));
+			return {
 				...state,
-				filteredThreadsCount: fileMonitorThreads.length,
 				data,
 			};
-			return newState;
 		},
 		setFileMonitorWindowsServiceStatus: (
 			state,
@@ -156,6 +196,7 @@ export default fileMonitorThreadsSlice.reducer;
 export const {
 	setData,
 	setPage,
+	setSort,
 	setState,
 	setFiles,
 	setSearch,
@@ -166,8 +207,6 @@ export const {
 	setAutoStart,
 	setDataLoading,
 	setFilesLoading,
-	setIncludeFileCount,
 	setFileMonitorThreads,
-	toggleIncludeFileCount,
 	setFileMonitorWindowsServiceStatus,
 } = fileMonitorThreadsSlice.actions;
