@@ -1,6 +1,6 @@
 import { Card, Col, Row, Table, Typography } from "antd";
 import { FolderType, SystemType } from "../../types";
-import { CardTableProps, getErrorFiles, getUnprocessedFiles } from "./utils";
+import { getErrorFiles, getUnprocessedFiles } from "./utils";
 import { useGetFiles } from "../../api/dashboard";
 
 function TableCards({ cutOffTimeMs }: { cutOffTimeMs: number }) {
@@ -30,12 +30,25 @@ function TableCards({ cutOffTimeMs }: { cutOffTimeMs: number }) {
 	);
 	const fmmErr = getErrorFiles(fmsErrors.data?.data);
 	const bfmmErr = getErrorFiles(bfmsErrors.data?.data);
+	const CardTableProps: any = {
+		pagination: false,
+		bordered: true,
+		size: "small",
+		style: { height: 235, marginRight: 12, border: "1px solid #eee" },
+		columns: [
+			{ title: "Thread", dataIndex: "threadName", width: 180 },
+			{ title: "Files", dataIndex: "fileCount", width: 40 },
+		],
+	};
 	return (
 		<>
 			<div>
 				<Row className="mt-2" gutter={18}>
 					<Col span={12} style={{ height: "max-content" }}>
-						<Card title="Unprocessed files < 30 minutes" bordered={false}>
+						<Card
+							title={`Unprocessed files < ${cutOffTimeMs / 60000} minutes`}
+							bordered={false}
+						>
 							<Row>
 								<Col span={12}>
 									<Typography.Title level={5}>FMS</Typography.Title>

@@ -25,7 +25,7 @@ function Home() {
 		system: SystemType.BFMS,
 	});
 
-	const cutOffTimeMins = 3000;
+	const cutOffTimeMins = 30;
 	const cutOffTimeMs = cutOffTimeMins * 60 * 1000;
 
 	return (
@@ -47,21 +47,25 @@ function Home() {
 						number={getTotalFileCount(fmsUnprocessed.data?.data) || 0}
 						pos={0}
 						text={"Unprocessed Files in FMS"}
+						isLoading={fmsUnprocessed.isLoading}
 					/>
 					<StatCard
 						number={getTotalFileCount(bfmsUnprocessed.data?.data) || 0}
 						pos={1}
 						text={"Unprocessed Files in BFMS"}
+						isLoading={bfmsUnprocessed.isLoading}
 					/>
 					<StatCard
 						number={getTotalFileCount(fmsErrors.data?.data) || 0}
 						pos={2}
 						text={"Error Files in FMS"}
+						isLoading={fmsErrors.isLoading}
 					/>
 					<StatCard
 						number={getTotalFileCount(bfmsErrors.data?.data) || 0}
 						pos={3}
 						text={"Error Files in BFMS"}
+						isLoading={bfmsErrors.isLoading}
 					/>
 				</Row>
 				<TableCards cutOffTimeMs={cutOffTimeMs} />

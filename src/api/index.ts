@@ -1,12 +1,12 @@
 import axios, { AxiosInstance } from "axios";
+import config from "../config";
 
-const baseURL = "http://localhost:5105";
+const baseURL = config.TRIMSMonitorAPI;
 const api: AxiosInstance = axios.create({
 	baseURL,
 	headers: {
 		"Content-Type": "application/json",
 		"Access-Control-Allow-Origin": "*",
-		Authorization: `Bearer ${window.MSAL_AUTH_TOKEN}`,
 	},
 });
 

@@ -9,7 +9,8 @@ import {
 } from "../types";
 
 interface FileMonitorThreadsState {
-	fileMonitorThreads: FileMonitorConfig;
+	fmsThreads: FileMonitorConfig;
+	bfmsThreads: FileMonitorConfig;
 	data: FileMonitorConfig;
 	columns: string[];
 	autoStart: string;
@@ -17,8 +18,6 @@ interface FileMonitorThreadsState {
 	searchQuery: string;
 	page: number;
 	perPage: number;
-	isDataLoading: boolean;
-	isFilesLoading: boolean;
 	files: ThreadFolderFiles[];
 	sort: "File Count" | "File Time" | "Thread Name";
 	system: SystemType;
@@ -26,7 +25,8 @@ interface FileMonitorThreadsState {
 }
 
 const initialState: FileMonitorThreadsState = {
-	fileMonitorThreads: [],
+	fmsThreads: [],
+	bfmsThreads: [],
 	data: [],
 	columns: ["MonitorName", "AutoStart", "FileCount", "Path"],
 	autoStart: "All",
@@ -34,8 +34,6 @@ const initialState: FileMonitorThreadsState = {
 	searchQuery: "",
 	page: 1,
 	perPage: 12,
-	isDataLoading: true,
-	isFilesLoading: true,
 	files: [],
 	sort: "Thread Name",
 	system: SystemType.FMS,
@@ -60,22 +58,18 @@ export const fileMonitorThreadsSlice = createSlice({
 			system: action.payload,
 		}),
 		setColumns: (state, action) => ({ ...state, columns: action.payload }),
-		setFileMonitorThreads: (state, action) => ({
+		setFMS: (state, action) => ({
 			...state,
-			fileMonitorThreads: action.payload,
+			fmsThreads: action.payload,
+		}),
+		setBFMS: (state, action) => ({
+			...state,
+			bfmsThreads: action.payload,
 		}),
 		setAutoStart: (state, action) => ({ ...state, autoStart: action.payload }),
 		setSort: (state, action) => ({
 			...state,
 			sort: action.payload,
-		}),
-		setDataLoading: (state, action) => ({
-			...state,
-			isDataLoading: action.payload,
-		}),
-		setFilesLoading: (state, action) => ({
-			...state,
-			isFilesLoading: action.payload === "NULL" ? null : action.payload,
 		}),
 		setPage: (state, action) => ({
 			...state,
@@ -97,7 +91,10 @@ export const fileMonitorThreadsSlice = createSlice({
 			return { ...state, files };
 		},
 		setData: (state) => {
-			let fileMonitorThreads = current(state.fileMonitorThreads);
+			let fileMonitorThreads;
+			if (state.system === SystemType.FMS)
+				fileMonitorThreads = current(state.fmsThreads);
+			else fileMonitorThreads = current(state.bfmsThreads);
 			let data = fileMonitorThreads.filter(
 				(monitor) =>
 					!!monitor.endpoint?.addEndPoint[0][GetFolderTypeKey(state.folder)] ||
@@ -111,7 +108,7 @@ export const fileMonitorThreadsSlice = createSlice({
 			}
 			if (state.sort === "Thread Name") {
 				data = data.sort((t1, t2) =>
-					t2.threadName.localeCompare(t2.threadName)
+					t1.threadName.localeCompare(t2.threadName)
 				);
 			} else if (state.sort === "File Count") {
 				data = data.sort((t1, t2) => {
@@ -179,7 +176,7 @@ export const fileMonitorThreadsSlice = createSlice({
 				data,
 			};
 		},
-		setFileMonitorWindowsServiceStatus: (
+		setServiceStatus: (
 			state,
 			action: { type: any; payload: FileMonitorsWindowsServiceStatus }
 		) => {
@@ -194,6 +191,8 @@ export const fileMonitorThreadsSlice = createSlice({
 export default fileMonitorThreadsSlice.reducer;
 
 export const {
+	setFMS,
+	setBFMS,
 	setData,
 	setPage,
 	setSort,
@@ -205,8 +204,5 @@ export const {
 	setColumns,
 	setPageSize,
 	setAutoStart,
-	setDataLoading,
-	setFilesLoading,
-	setFileMonitorThreads,
-	setFileMonitorWindowsServiceStatus,
+	setServiceStatus,
 } = fileMonitorThreadsSlice.actions;

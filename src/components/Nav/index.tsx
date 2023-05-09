@@ -1,22 +1,25 @@
-import { Layout, Space, Tag, Typography } from "antd";
+import { Button, Layout, Space, Tag, Typography } from "antd";
 import SidenavContent from "./SidenavContent";
 import * as styles from "./Nav.module.css";
-import config from "../../config";
+import config, { removeUser } from "../../config";
 const { Header, Sider, Content } = Layout;
-import { Card } from "antd";
 import { blue } from "@ant-design/colors";
 import moment from "moment";
+import { LogoutOutlined } from "@ant-design/icons";
+import { setUser, useDispatch, useSelector } from "../../store";
 
 export default function SidebarWithHeader({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	const user = useSelector((s) => s.global.user);
+	const dispatch = useDispatch();
 	return (
 		<Layout className={styles.mainLayout}>
 			<Sider
 				style={{ backgroundColor: "white" }}
-				width={255}
+				width={240}
 				className={styles.sider}
 			>
 				<SidenavContent />
@@ -25,9 +28,9 @@ export default function SidebarWithHeader({
 				<Header className={styles.header}>
 					<Tag
 						color="processing"
-						style={{ fontWeight: "bold", marginRight: 18, color: blue[5] }}
+						style={{ fontWeight: "bold", color: blue[5] }}
 					>
-						{moment().format("dddd - LL")}
+						{moment().format("ddd - LL")}
 					</Tag>
 					<Tag
 						style={{ fontWeight: "bold" }}
@@ -36,6 +39,21 @@ export default function SidebarWithHeader({
 					>
 						{config.environmentName}
 					</Tag>
+					{!!user && (
+						<Button
+							ghost
+							size="small"
+							type="primary"
+							className="ma-2"
+							icon={<LogoutOutlined />}
+							onClick={() => {
+								removeUser();
+								dispatch(setUser(null));
+							}}
+						>
+							Logout
+						</Button>
+					)}
 				</Header>
 				<Content className={styles.content}>{children}</Content>
 			</Layout>

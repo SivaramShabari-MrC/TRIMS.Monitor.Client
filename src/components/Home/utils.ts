@@ -1,24 +1,13 @@
 import { ThreadFolderFiles } from "../../types";
 
 export function truncate(str: string) {
-	const len = window.innerWidth > 1400 ? 28 : 22;
+	const len = 20;
 	if (str.length > len) {
 		return str.substring(0, len) + "...";
 	} else {
 		return str;
 	}
 }
-
-export const CardTableProps: any = {
-	pagination: false,
-	bordered: true,
-	size: "small",
-	style: { height: 235, marginRight: 12, border: "1px solid #eee" },
-	columns: [
-		{ title: "Thread", dataIndex: "threadName", width: 180 },
-		{ title: "Files", dataIndex: "fileCount", width: 40 },
-	],
-};
 
 export const getUnprocessedFiles = (
 	data: ThreadFolderFiles[] | undefined,

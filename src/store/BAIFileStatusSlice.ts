@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import moment from "moment";
 import dayjs from "dayjs";
 
 interface BAIFileStatusState {
@@ -7,7 +6,7 @@ interface BAIFileStatusState {
 	status: any;
 }
 
-const initialState = {
+const initialState: BAIFileStatusState = {
 	date: dayjs().subtract(1, "day").format("MM/DD/YYYY"),
 	status: {},
 };

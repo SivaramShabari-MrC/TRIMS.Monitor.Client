@@ -1,13 +1,14 @@
 .sider {
 	background-color: red;
 	padding-top: 14px;
-	/* margin-top: 12px; */
 	min-height: 100vh;
 }
+
 .mainLayout {
 	min-height: 100vh;
 	background: transparent;
 }
+
 .contentLayout {
 	max-height: 100vh;
 }
@@ -17,16 +18,12 @@
 	justify-content: end;
 	align-items: center;
 	background-color: white;
+	padding-right: 12px;
 }
 
 .content {
 	overflow-y: auto;
 	padding: 16px;
-}
-
-.navItemLink {
-	text-decoration: none;
-	width: 100%;
 }
 
 .navItemContainer {

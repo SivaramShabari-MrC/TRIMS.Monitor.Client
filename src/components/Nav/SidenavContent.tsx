@@ -14,6 +14,8 @@ import {
 	DatabaseOutlined,
 	HomeOutlined,
 	AppstoreOutlined,
+	FileSearchOutlined,
+	LogoutOutlined,
 } from "@ant-design/icons";
 import styles from "./Nav.module.css";
 import logo from "../../assets/TRIMS.ico";
@@ -26,7 +28,7 @@ const links = [
 	{
 		name: "File Monitors",
 		route: "/fileMonitorThreads",
-		icon: <GoFileSubmodule />,
+		icon: <FileSearchOutlined />,
 	},
 	{
 		name: "Transaction Report",

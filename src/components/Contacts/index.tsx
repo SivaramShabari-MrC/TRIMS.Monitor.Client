@@ -11,8 +11,8 @@ function Contacts() {
 	const [currentTab, setCurrentTab] = useState();
 	const [emailsIds, setEmailsIds] = useState<string[]>([]);
 	useEffect(() => {
-		if (!currentTab && contacts.data !== null)
-			setCurrentTab(contacts.data[0].teamName);
+		if (!currentTab && contacts.data !== null && contacts.data?.length > 0)
+			setCurrentTab(contacts?.data[0]?.teamName);
 		const currentTabEmails: string[] = [];
 		contacts?.data
 			?.filter((c: any) => c.teamName === currentTab)

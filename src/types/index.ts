@@ -41,3 +41,20 @@ export function GetFolderTypeKey(folder: FolderType): FolderKeyType {
 			return "sourceFolder";
 	}
 }
+
+export function GetFolderName(folder: FolderType): string {
+	switch (folder) {
+		case 0:
+			return "Source Folder";
+		case 1:
+			return "Errors Folder";
+		case 2:
+			return "Processed Folder";
+		case 3:
+			return "Debug Folder";
+		case 4:
+			return "Destination Folder";
+		default:
+			return "Source Folder";
+	}
+}

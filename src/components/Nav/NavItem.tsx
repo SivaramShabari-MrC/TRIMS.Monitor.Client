@@ -9,11 +9,13 @@ type NavItemProps = {
 
 import { Typography } from "antd";
 import { blue } from "@ant-design/colors";
+import { useSelector } from "../../store";
 
 const NavItem = ({ icon, route, children }: NavItemProps) => {
 	const path = useLocation();
 	const doesRouteMatch =
 		path.pathname.replace("/", "") === route.replace("/", "");
+	const user = useSelector((s) => s.global.user);
 	return (
 		<>
 			<Link to={route} className={styles.navItemLink}>
@@ -34,6 +36,7 @@ const NavItem = ({ icon, route, children }: NavItemProps) => {
 					<span
 						style={{
 							marginLeft: "auto",
+							marginRight: 15,
 							width: 4,
 							background: doesRouteMatch ? blue[5] : "",
 						}}

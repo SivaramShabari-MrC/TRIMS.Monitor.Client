@@ -1,14 +1,13 @@
 import api from ".";
 import { message } from "antd";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "../store";
 import {
 	setData,
-	setDataLoading,
-	setFileMonitorThreads,
-	setFileMonitorWindowsServiceStatus,
+	setFMS,
+	setBFMS,
+	setServiceStatus,
 	setFiles,
-	setFilesLoading,
 } from "../store/fileMonitorThreadSlice";
 import {
 	FMSWindowsServiceCommand,
@@ -19,25 +18,30 @@ import {
 	ThreadFolderFiles,
 } from "../types";
 import { useEffect, useState } from "react";
+import { getIdToken } from "../config";
 
 export const getFileMonitorThreads = (system: SystemType) => {
 	return api.get<FileMonitorConfig>("/fileMonitorThreads/all", {
 		params: { system },
+		headers: {
+			Authorization: `Bearer ${getIdToken()}`,
+		},
 	});
 };
 
 export const getFileMonitorThreadFiles = (
 	system: SystemType,
 	threadNames: string[],
-	folder: FolderType,
-	setFilesLoading: () => void
+	folder: FolderType
 ) => {
-	setFilesLoading();
 	return api.get<ThreadFolderFiles[]>("/fileMonitorThreads/files", {
 		params: {
 			system,
 			threadNames: threadNames.join(","),
 			folder,
+		},
+		headers: {
+			Authorization: `Bearer ${getIdToken()}`,
 		},
 	});
 };
@@ -54,6 +58,9 @@ export const downloadFile = (
 			threadName,
 			folder,
 			fileName,
+		},
+		headers: {
+			Authorization: `Bearer ${getIdToken()}`,
 		},
 	});
 };
@@ -73,12 +80,20 @@ export const moveFile = (
 			to,
 			fileName,
 		},
+		headers: {
+			Authorization: `Bearer ${getIdToken()}`,
+		},
 	});
 };
 
 export const getWindowsFMSServiceStatuses = () => {
 	return api.get<FileMonitorsWindowsServiceStatus>(
-		"/fileMonitorThreads/windowsService/status"
+		"/fileMonitorThreads/windowsService/status",
+		{
+			headers: {
+				Authorization: `Bearer ${getIdToken()}`,
+			},
+		}
 	);
 };
 
@@ -90,6 +105,9 @@ export const executeWindowsFMSServiceAction = (
 		params: {
 			system,
 			command,
+		},
+		headers: {
+			Authorization: `Bearer ${getIdToken()}`,
 		},
 	});
 };
@@ -104,23 +122,17 @@ export const useGetFileMonitorThreads = (system: SystemType) => {
 			refetchOnMount: false,
 			refetchOnReconnect: false,
 			staleTime: Infinity,
-			onSuccess: (data) => {
-				dispatch(setDataLoading(false));
-				dispatch(
-					setFileMonitorThreads(
-						data.data
-							.slice()
-							.sort((a, b) => (a.threadName > b.threadName ? 1 : -1))
-					)
-				);
-				dispatch(setData());
-				return data.data;
-			},
-			onError: (e: any) => {
-				message.error(e.message);
-			},
-			onSettled: () => {
-				dispatch(setDataLoading(false));
+			onSettled(data, error) {
+				if (error || !data) {
+					message.error("Unable to fetch FMS and BFMS config files");
+					console.error(error);
+				} else {
+					console.log("useGetFileMonitorThreads");
+					if (system === SystemType.FMS) dispatch(setFMS(data.data));
+					else dispatch(setBFMS(data.data));
+					dispatch(setData());
+					return data.data;
+				}
 			},
 		}
 	);
@@ -134,9 +146,6 @@ export const useGetFiles = () => {
 	const end = start + perPage;
 	const [threadNames, setThreadNames] = useState<string[]>([]);
 	const dispatch = useDispatch();
-	const _setFilesLoading = () => {
-		dispatch(setFilesLoading(true));
-	};
 	useEffect(() => {
 		if (data && data.length) {
 			const tNames =
@@ -147,24 +156,22 @@ export const useGetFiles = () => {
 		}
 	}, [data]);
 	return useQuery(
-		["files", folder, ...threadNames],
-		() =>
-			getFileMonitorThreadFiles(system, threadNames, folder, _setFilesLoading),
+		["files", folder, { threads: threadNames.sort() }],
+		() => getFileMonitorThreadFiles(system, threadNames, folder),
 		{
 			enabled: threadNames.length > 0,
 			refetchOnMount: false,
 			refetchOnWindowFocus: false,
 			refetchOnReconnect: false,
-			onSuccess: (data) => {
-				dispatch(setFiles(data.data));
-				dispatch(setData());
-				return data.data;
-			},
-			onError: (e: any) => {
-				message.error(e.message);
-			},
-			onSettled: () => {
-				dispatch(setFilesLoading(false));
+			onSettled: (data, error) => {
+				if (error || !data) {
+					message.error("Unable to fetch files from thread folders");
+					console.error(error);
+				} else {
+					dispatch(setFiles(data.data));
+					dispatch(setData());
+					return data.data;
+				}
 			},
 		}
 	);
@@ -181,7 +188,12 @@ export const useDownLoadFile = () => {
 		(p: DownloadFile) =>
 			downloadFile(p.system, p.threadName, p.folder, p.fileName),
 		{
-			onSuccess: () => {},
+			onSettled: (data, error) => {
+				if (error) {
+					message.error("Error while downloading file");
+					console.error(error);
+				} else message.success("File downloaded");
+			},
 		}
 	);
 };
@@ -199,8 +211,11 @@ export const useMoveFile = () => {
 	return useMutation(
 		(m: MoveFile) => moveFile(m.system, m.threadName, m.from, m.to, m.fileName),
 		{
-			onSuccess: () => {
-				files.refetch();
+			onSettled: (data, error) => {
+				if (error) {
+					message.error("Error while moving files.");
+					console.error(error);
+				} else files.refetch();
 			},
 		}
 	);
@@ -215,8 +230,11 @@ export const useGetFileMonitorWindowsServiceStatus = () => {
 			refetchOnWindowFocus: false,
 			refetchOnMount: false,
 			refetchOnReconnect: false,
-			onSuccess: (data) => {
-				dispatch(setFileMonitorWindowsServiceStatus(data.data));
+			onSettled: (data, error) => {
+				if (error || !data) {
+					message.error("Error while fetching Windows service status");
+					console.error(error);
+				} else dispatch(setServiceStatus(data.data));
 			},
 		}
 	);

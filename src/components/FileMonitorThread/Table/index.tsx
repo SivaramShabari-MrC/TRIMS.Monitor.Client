@@ -4,6 +4,7 @@ import { Table } from "antd";
 import { setPage, setPageSize } from "../../../store/fileMonitorThreadSlice";
 import { useDispatch, useSelector } from "../../../store";
 import "./Table.css";
+import { useGetFiles } from "../../../api/fileMonitorThread";
 type FileMonitorThreadTableProps = { isLoading: boolean };
 function FileMonitorThreadTable({ isLoading }: FileMonitorThreadTableProps) {
 	const state = useSelector((s) => s.fileMonitorThreads);
@@ -16,7 +17,9 @@ function FileMonitorThreadTable({ isLoading }: FileMonitorThreadTableProps) {
 		dispatch(setPageSize(pagination.pageSize));
 	};
 
-	const columns = getColumns(state.folder, state.files, state.isFilesLoading);
+	const files = useGetFiles();
+	const columns = getColumns(state.folder, state.files, files.isLoading);
+
 	useEffect(() => {
 		if (tableRef.current) {
 			const tBodyY = tableRef.current.getBoundingClientRect().y;

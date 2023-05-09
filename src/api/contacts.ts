@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import contacts from "../components/Contacts/conacts.json";
 import { message } from "antd";
 import api from ".";
@@ -7,7 +6,9 @@ import { Contact, ContactSource } from "../types/Contact";
 
 const getContacts = () =>
 	new Promise<any>((resolve) => resolve(contacts as ContactSource[]));
+
 const getPhoto = (email: string) => api.get<string>(`/contact/photo/${email}`);
+
 const getContactDetails = (emailIds: string[]) =>
 	api.get<Contact[]>("/contacts?", {
 		params: { emailIds: emailIds.join(",") },
@@ -15,9 +16,11 @@ const getContactDetails = (emailIds: string[]) =>
 
 export const useGetAllContacts = () => {
 	return useQuery(["allContacts"], () => getContacts(), {
-		onSuccess: (data) => {},
-		onError: (e: any) => {
-			message.error(e.message);
+		onSettled: (data, error) => {
+			if (error) {
+				message.error("Unable to get contacts");
+				console.error(error);
+			}
 		},
 	});
 };
@@ -31,13 +34,14 @@ export const useGetContacts = (emailIds: string[]) => {
 			refetchOnMount: false,
 			refetchOnWindowFocus: false,
 			refetchOnReconnect: false,
-			onSuccess: (data) => {
-				return data.data?.sort((a, b) =>
-					a.displayName < b.displayName ? 1 : -1
-				);
-			},
-			onError: (e: any) => {
-				message.error(e.message);
+			onSettled: (data, error) => {
+				if (error || !data) {
+					message.error("Unable to get contacts");
+					console.error(error);
+				} else
+					return data.data?.sort((a, b) =>
+						a.displayName < b.displayName ? 1 : -1
+					);
 			},
 		}
 	);
@@ -50,9 +54,10 @@ export const useGetPhoto = (email: string) => {
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
 		retryOnMount: false,
-		onSuccess: (data) => {},
-		onError: (e) => {
-			console.error("Failed to load image for " + email);
+		onSettled: (data, error) => {
+			if (error) {
+				console.error("Failed to load image for " + email);
+			}
 		},
 		retry: 0,
 	});

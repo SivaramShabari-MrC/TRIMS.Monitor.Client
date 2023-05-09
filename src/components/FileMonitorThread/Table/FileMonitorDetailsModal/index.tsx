@@ -8,7 +8,11 @@ import {
 	useGetFiles,
 	useMoveFile,
 } from "../../../../api/fileMonitorThread";
-import { GetFolderTypeKey, ThreadFileType } from "../../../../types";
+import {
+	GetFolderName,
+	GetFolderTypeKey,
+	ThreadFileType,
+} from "../../../../types";
 import { useSelector } from "../../../../store";
 import FileListItem from "./FileListItem";
 
@@ -27,7 +31,7 @@ export default function FileMonitorModal({
 	const state = useSelector((s) => s.fileMonitorThreads);
 	const path = useSelector((s) => s.fileMonitorThreads.folder);
 
-	useGetFileMonitorThreads();
+	useGetFileMonitorThreads(state.system);
 	const showModal = () => setIsModalOpen(true);
 	const handleOk = () => setIsModalOpen(false);
 	const handleCancel = () => setIsModalOpen(false);
@@ -57,7 +61,9 @@ export default function FileMonitorModal({
 			return 0;
 		})
 		.slice(page * pageSize, page * pageSize + pageSize);
-
+	const fileCount = files?.length || 0;
+	const getfileCountTxt = () =>
+		fileCount > 1 ? `${fileCount} files` : `${fileCount} file`;
 	return (
 		<>
 			<Link onClick={showModal}>
@@ -78,8 +84,9 @@ export default function FileMonitorModal({
 				style={{ minHeight: window.innerHeight * 0.8 }}
 				title={
 					<>
-						{`Files in ${GetFolderTypeKey(path)} - ${threadName}`}
-						<Text>
+						<Text style={{ fontSize: 20 }}>{threadName}</Text>
+						<Text className="ml-3">
+							{`${GetFolderName(path)} - ${getfileCountTxt()}`}
 							{(downloadFile.isLoading ||
 								moveFile.isLoading ||
 								isLoading ||
@@ -108,6 +115,7 @@ export default function FileMonitorModal({
 				]}
 			>
 				<Space
+					className="mt-4"
 					style={{
 						height: Math.max(window.innerHeight * 0.8, 400),
 						overflowY: "auto",

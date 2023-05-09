@@ -2,16 +2,17 @@ import { Route, Routes } from "react-router-dom";
 import SidebarWithHeader from "./components/Nav";
 import FileMonitorThreads from "./components/FileMonitorThread";
 import { UserAgentApplication } from "msal";
-import config from "./config";
-import { useEffect } from "react";
-import { setUser, useDispatch, useSelector } from "./store";
+import config, { getUser, setUser as setLocalUser, removeUser } from "./config";
+import { useEffect, useState } from "react";
+import { setUser as setReduxUser, useDispatch, useSelector } from "./store";
 import Login from "./components/common/Login";
-import { message } from "antd";
+import { Spin, message } from "antd";
 import TransactionReport from "./components/TransactionReport";
 import BAIFileStatus from "./components/BAIFilleStatus";
 import Contacts from "./components/Contacts";
 import ScheduledTasks from "./components/ScheduledTasks";
 import Home from "./components/Home";
+import Loading from "./components/common/Loading";
 
 const userAgentApplication = new UserAgentApplication({
 	auth: {
@@ -24,12 +25,11 @@ const userAgentApplication = new UserAgentApplication({
 		storeAuthStateInCookie: true,
 	},
 });
-const LOCAL_STORAGE_USER = "TRIMS-Monitor-User";
+
 const App = () => {
 	const state = useSelector((state) => state.global);
 	const dispatch = useDispatch();
-	const getLocalStorageUser = () =>
-		JSON.parse(sessionStorage.getItem(LOCAL_STORAGE_USER) || "null");
+	const [isUserLoaded, setIsUserLoaded] = useState(false);
 	const loginUserAgentApplication = async () => {
 		try {
 			let response = await userAgentApplication.loginPopup({
@@ -37,45 +37,47 @@ const App = () => {
 				prompt: "select_account",
 			});
 			if (response != null && response.idTokenClaims != null) {
-				dispatch(setUser(response.account.name));
-				sessionStorage.setItem(LOCAL_STORAGE_USER, JSON.stringify(response));
+				dispatch(setReduxUser(response.account.name));
+				setIsUserLoaded(true);
+				setLocalUser(response);
 			} else throw new Error("User login error");
 		} catch (error) {
-			dispatch(setUser(null));
+			dispatch(setReduxUser(null));
 			console.error(error);
 		}
 	};
+
 	useEffect(() => {
-		if (getLocalStorageUser() === null) {
-			dispatch(setUser(null));
+		if (getUser() === null) {
+			dispatch(setReduxUser(null));
 			loginUserAgentApplication();
+			setIsUserLoaded(true);
 		} else {
-			dispatch(setUser(getLocalStorageUser().account.name));
+			dispatch(setReduxUser(getUser().account.name));
+			setIsUserLoaded(true);
 		}
 		const checkValidity = setInterval(() => {
-			if (
-				getLocalStorageUser() !== null &&
-				new Date(getLocalStorageUser().expiresOn) < new Date()
-			) {
-				console.log("TIME", new Date(getLocalStorageUser().expiresOn));
+			if (getUser() !== null && new Date(getUser().expiresOn) < new Date()) {
 				message.warning("Session expired! Login again to continue");
-				sessionStorage.removeItem(LOCAL_STORAGE_USER);
-				dispatch(setUser(null));
+				removeUser();
+				dispatch(setReduxUser(null));
 			}
 			return () => {
 				clearInterval(checkValidity);
 			};
-		}, 10 * 1000);
+		}, 10 * 1000); //check every 10 seconds
 	}, []);
 
 	return (
 		<>
-			{state.user === null ? (
-				<>
-					<Login login={() => loginUserAgentApplication()} />
-				</>
-			) : (
-				<SidebarWithHeader>
+			<SidebarWithHeader>
+				{!isUserLoaded ? (
+					<Loading message="" />
+				) : !state.user ? (
+					<>
+						<Login login={() => loginUserAgentApplication()} />
+					</>
+				) : (
 					<Routes>
 						<Route path="/" element={<Home />} />
 						<Route
@@ -87,8 +89,8 @@ const App = () => {
 						<Route path="/contacts" element={<Contacts />} />
 						<Route path="/scheduledTasks" element={<ScheduledTasks />} />
 					</Routes>
-				</SidebarWithHeader>
-			)}
+				)}
+			</SidebarWithHeader>
 		</>
 	);
 };

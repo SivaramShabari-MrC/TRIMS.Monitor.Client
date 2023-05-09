@@ -10,6 +10,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { message } from "antd";
 import { useGetFileMonitorThreads } from "./fileMonitorThread";
+import { getIdToken } from "../config";
 
 export const getFileMonitorThreadFiles = (
 	system: SystemType,
@@ -21,6 +22,9 @@ export const getFileMonitorThreadFiles = (
 			system,
 			threadNames: threadNames.join(","),
 			folder,
+		},
+		headers: {
+			Authorization: `Bearer ${getIdToken()}`,
 		},
 	});
 };
@@ -52,13 +56,14 @@ export const useGetFiles = ({
 			refetchOnMount: false,
 			refetchOnWindowFocus: false,
 			refetchOnReconnect: false,
-			onSuccess: (data) => {
-				return data;
+
+			onError: (e: any) => {},
+			onSettled: (data, error) => {
+				if (error || !data) {
+					message.error("Unable to fetch files from thread folders");
+					console.error(error);
+				}
 			},
-			onError: (e: any) => {
-				message.error(e.message);
-			},
-			onSettled: () => {},
 		}
 	);
 };
